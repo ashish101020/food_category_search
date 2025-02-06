@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 
 const Foods_API = () => {
   const [mealData, setMealData] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState("Indian"); // Track selected button
+  const [selectedCountry, setSelectedCountry] = useState("Indian"); 
+  const [inputData, setInputData] = useState("");
   const countryName = ["Indian", "Canadian", "Italian", "Chinese", "American", "Russian", "Thai", "Japanese", "Australian"];
 
   useEffect(() => {
@@ -20,6 +21,21 @@ const Foods_API = () => {
     fetchDataFromAPI();
   }, [selectedCountry]);
 
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+        const api = await fetch(
+          `https://www.themealdb.com/api/json/v1/1/search.php?s=${inputData}`
+        );
+        const data = await api.json();
+        // console.log(data)
+        setMealData(data.meals || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+
+  }
+
   return (
     <>
       <div className="button-container">
@@ -33,6 +49,9 @@ const Foods_API = () => {
           </button>
         ))}
       </div>
+      <form className="search-bar" onSubmit={submitHandler}>
+        <input type="text" onChange={(e) => setInputData(e.target.value)} />
+      </form>
 
       <div className="meal-container">
         {mealData.map((meal) => (
