@@ -1,0 +1,49 @@
+import { useEffect, useState } from "react";
+
+const Foods_API = () => {
+  const [mealData, setMealData] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("Indian"); // Track selected button
+  const countryName = ["Indian", "Canadian", "Italian", "Chinese", "American", "Russian", "Thai", "Japanese", "Australian"];
+
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        const api = await fetch(
+          `https://www.themealdb.com/api/json/v1/1/filter.php?a=${selectedCountry}`
+        );
+        const data = await api.json();
+        setMealData(data.meals || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchDataFromAPI();
+  }, [selectedCountry]);
+
+  return (
+    <>
+      <div className="button-container">
+        {countryName.map((name) => (
+          <button
+            key={name}
+            className={`country-button ${selectedCountry === name ? "active" : ""}`}
+            onClick={() => setSelectedCountry(name)}
+          >
+            {name}
+          </button>
+        ))}
+      </div>
+
+      <div className="meal-container">
+        {mealData.map((meal) => (
+          <div key={meal.idMeal} className="meal-item">
+            <img src={meal.strMealThumb} alt={meal.strMeal} className="meal-image" />
+            <h3>{meal.strMeal}</h3>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default Foods_API;
