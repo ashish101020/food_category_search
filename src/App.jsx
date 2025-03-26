@@ -1,10 +1,10 @@
-import Foods_API from './components/Foods_API'
+import Frame from './components/Frame'
 
 function App() {
   
   return (
     <>
-      <Foods_API/>
+      <Frame/>
     </>
   )
 }
